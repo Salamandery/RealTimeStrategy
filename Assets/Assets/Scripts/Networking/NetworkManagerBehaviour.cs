@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class NetworkManagerBehaviour : NetworkManager
 {
+    [SerializeField]
+    private GameObject unitSpawnPrefab;
     #region Server
     public override void OnClientConnect()
     {
@@ -14,6 +16,13 @@ public class NetworkManagerBehaviour : NetworkManager
     {
         Debug.Log($"{numPlayers} Players in the server!");
         base.OnServerAddPlayer(conn);
+        GameObject unitInstance = Instantiate(
+            unitSpawnPrefab,
+            conn.identity.transform.position,
+            conn.identity.transform.rotation
+        );
+
+        NetworkServer.Spawn(unitInstance, conn);
     }
     #endregion
 }
