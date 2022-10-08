@@ -9,6 +9,15 @@ public class UnitsMovements : NetworkBehaviour
     private Camera mainCamera;
 
     #region Server
+    [ServerCallback]
+    void Update()
+    {
+        if (!agent.hasPath) { return; }
+        if (agent.remainingDistance > agent.stoppingDistance) { return; }
+
+        agent.ResetPath();
+    }
+
     [Command]
     public void CmdMove(Vector3 position)
     {
