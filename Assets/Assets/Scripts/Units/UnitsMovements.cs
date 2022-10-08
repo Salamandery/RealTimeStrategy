@@ -10,7 +10,7 @@ public class UnitsMovements : NetworkBehaviour
 
     #region Server
     [Command]
-    private void CmdMove(Vector3 position)
+    public void CmdMove(Vector3 position)
     {
         bool NavHitCondition = NavMesh.SamplePosition(
             position,
@@ -24,26 +24,26 @@ public class UnitsMovements : NetworkBehaviour
     }
     #endregion
     #region Client
-    public override void OnStartAuthority()
-    {
-        mainCamera = Camera.main;
-    }
+    /*   public override void OnStartAuthority()
+       {
+           mainCamera = Camera.main;
+       }
 
-    private void OnMoveAction()
-    {
-        if (!hasAuthority) { return; }
-        if (!Input.GetMouseButtonDown(1)) { return; }
+       private void OnMoveAction()
+       {
+           if (!hasAuthority) { return; }
+           if (!Input.GetMouseButtonDown(1)) { return; }
 
-        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+           Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
 
-        if (!Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity)) { return; }
+           if (!Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity)) { return; }
 
-        CmdMove(hit.point);
-    }
+           CmdMove(hit.point);
+       }
 
-    void Update()
-    {
-        OnMoveAction();
-    }
+       void Update()
+       {
+           OnMoveAction();
+       }*/
     #endregion
 }
