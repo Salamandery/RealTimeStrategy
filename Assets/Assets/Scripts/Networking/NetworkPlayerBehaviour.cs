@@ -7,6 +7,11 @@ public class NetworkPlayerBehaviour : NetworkBehaviour
     [SerializeField]
     private List<UnitBehaviour> units = new List<UnitBehaviour>();
 
+    public List<UnitBehaviour> GetPlayerUnits()
+    {
+        return units;
+    }
+
     #region Server
     public override void OnStartServer()
     {
