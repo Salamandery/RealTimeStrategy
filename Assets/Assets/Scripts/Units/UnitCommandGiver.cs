@@ -11,7 +11,6 @@ public class UnitCommandGiver : MonoBehaviour
     void Start()
     {
         mainCamera = Camera.main;
-        //unitSelectionHandler
     }
 
     void Update()
@@ -29,7 +28,26 @@ public class UnitCommandGiver : MonoBehaviour
 
         if (!rayCondition) { return; }
 
+        if (hit.collider.TryGetComponent<Targetable>(out Targetable target))
+        {
+            if (target.hasAuthority)
+            {
+                TryMove(hit.point);
+                return;
+            }
+            TryTarget(target);
+            return;
+        }
+
         TryMove(hit.point);
+    }
+
+    private void TryTarget(Targetable targetable)
+    {
+        foreach (UnitBehaviour unit in unitSelectionHandler.GetSelectedUnits())
+        {
+            unit.GetTargeter().CmdSetTarget(targetable.gameObject);
+        }
     }
 
     private void TryMove(Vector3 point)

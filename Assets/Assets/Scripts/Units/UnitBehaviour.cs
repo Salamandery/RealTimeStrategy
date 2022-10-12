@@ -8,6 +8,8 @@ public class UnitBehaviour : NetworkBehaviour
     [SerializeField]
     private UnitsMovements unitsMovements;
     [SerializeField]
+    private Targeter targeter;
+    [SerializeField]
     private UnityEvent onSelected;
     [SerializeField]
     private UnityEvent onDeselected;
@@ -18,6 +20,10 @@ public class UnitBehaviour : NetworkBehaviour
     public static event Action<UnitBehaviour> AuthorityOnUnitSpawned;
     public static event Action<UnitBehaviour> AuthorityOnUnitDespawned;
 
+    public Targeter GetTargeter()
+    {
+        return targeter;
+    }
     public UnitsMovements GetUnitsMovements()
     {
         return unitsMovements;

@@ -6,12 +6,16 @@ public class UnitsMovements : NetworkBehaviour
 {
     [SerializeField]
     private NavMeshAgent agent;
-    private Camera mainCamera;
+    [SerializeField]
+    private Targeter targeter;
+    [SerializeField]
+    private float chaseRange = 10f;
 
     #region Server
     [ServerCallback]
     void Update()
     {
+        hasTargetToChase();
         if (!agent.hasPath) { return; }
         if (agent.remainingDistance > agent.stoppingDistance) { return; }
 
@@ -21,6 +25,8 @@ public class UnitsMovements : NetworkBehaviour
     [Command]
     public void CmdMove(Vector3 position)
     {
+        targeter.ClearTarget();
+
         bool NavHitCondition = NavMesh.SamplePosition(
             position,
             out NavMeshHit hit,
@@ -33,26 +39,24 @@ public class UnitsMovements : NetworkBehaviour
     }
     #endregion
     #region Client
-    /*   public override void OnStartAuthority()
-       {
-           mainCamera = Camera.main;
-       }
+    private void hasTargetToChase()
+    {
+        Targetable target = targeter.GetTarget();
 
-       private void OnMoveAction()
-       {
-           if (!hasAuthority) { return; }
-           if (!Input.GetMouseButtonDown(1)) { return; }
+        if (target != null)
+        {
+            float distance = (target.transform.position - transform.position).sqrMagnitude;
+            if (distance > chaseRange * chaseRange)
+            {
+                agent.SetDestination(target.transform.position);
+            }
+            else if (agent.hasPath)
+            {
+                agent.ResetPath();
+            }
 
-           Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-
-           if (!Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity)) { return; }
-
-           CmdMove(hit.point);
-       }
-
-       void Update()
-       {
-           OnMoveAction();
-       }*/
+            return;
+        }
+    }
     #endregion
 }

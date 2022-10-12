@@ -21,6 +21,7 @@ public class UnitSelectionHandler : MonoBehaviour
     void Start()
     {
         mainCamera = Camera.main;
+        player = NetworkClient.connection.identity.GetComponent<NetworkPlayerBehaviour>();
     }
 
     void Update()
