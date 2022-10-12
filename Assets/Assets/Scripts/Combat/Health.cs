@@ -7,10 +7,11 @@ public class Health : NetworkBehaviour
     [SerializeField]
     private float maxHealth = 100f;
 
-    [SerializeField, SyncVar]
+    [SerializeField, SyncVar(hook = nameof(HandleHealthUpdated))]
     private float currentHealth;
 
     public event Action ServerOnDie;
+    public event Action<float, float> ClientOnHealthUpdated;
 
     #region Server
     public override void OnStartServer()
@@ -34,6 +35,9 @@ public class Health : NetworkBehaviour
     #endregion
 
     #region Client
-
+    private void HandleHealthUpdated(float oldHealth, float newHealth)
+    {
+        ClientOnHealthUpdated?.Invoke(newHealth, maxHealth);
+    }
     #endregion
 }

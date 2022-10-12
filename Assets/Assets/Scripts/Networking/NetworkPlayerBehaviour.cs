@@ -40,30 +40,28 @@ public class NetworkPlayerBehaviour : NetworkBehaviour
     #endregion
 
     #region Client
-    public override void OnStartClient()
+    public override void OnStartAuthority()
     {
-        if (!isClientOnly) { return; }
+        if (NetworkServer.active) { return; }
 
-        UnitBehaviour.AuthorityOnUnitSpawned += AuthorityHandlerUnitSpawned;
-        UnitBehaviour.AuthorityOnUnitDespawned += AuthorityHandlerUnitDespawned;
+        UnitBehaviour.AuthorityOnUnitSpawned += AuthorityHandleUnitSpawned;
+        UnitBehaviour.AuthorityOnUnitDespawned += AuthorityHandleUnitDespawned;
     }
 
     public override void OnStopClient()
     {
-        if (!isClientOnly) { return; }
+        if (!isClientOnly || !hasAuthority) { return; }
 
-        UnitBehaviour.AuthorityOnUnitSpawned -= AuthorityHandlerUnitSpawned;
-        UnitBehaviour.AuthorityOnUnitDespawned -= AuthorityHandlerUnitDespawned;
+        UnitBehaviour.AuthorityOnUnitSpawned -= AuthorityHandleUnitSpawned;
+        UnitBehaviour.AuthorityOnUnitDespawned -= AuthorityHandleUnitDespawned;
     }
 
-    private void AuthorityHandlerUnitSpawned(UnitBehaviour unit)
+    private void AuthorityHandleUnitSpawned(UnitBehaviour unit)
     {
-        if (!hasAuthority) { return; }
         units.Add(unit);
     }
-    private void AuthorityHandlerUnitDespawned(UnitBehaviour unit)
+    private void AuthorityHandleUnitDespawned(UnitBehaviour unit)
     {
-        if (!hasAuthority) { return; }
         units.Remove(unit);
     }
     #endregion

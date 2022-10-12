@@ -22,6 +22,13 @@ public class UnitSelectionHandler : MonoBehaviour
     {
         mainCamera = Camera.main;
         player = NetworkClient.connection.identity.GetComponent<NetworkPlayerBehaviour>();
+
+        UnitBehaviour.AuthorityOnUnitDespawned += AuthorityHandleUnitDespawned;
+    }
+
+    private void OnDestroy()
+    {
+        UnitBehaviour.AuthorityOnUnitDespawned -= AuthorityHandleUnitDespawned;
     }
 
     void Update()
@@ -127,5 +134,10 @@ public class UnitSelectionHandler : MonoBehaviour
                 unitBehaviour.Select();
             }
         }
+    }
+
+    private void AuthorityHandleUnitDespawned(UnitBehaviour unit)
+    {
+        selectedUnits.Remove(unit);
     }
 }
